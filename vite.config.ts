@@ -12,7 +12,7 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        popup: 'popup.html'
+        popup: 'index.html'
       },
       output: {
         entryFileNames: 'assets/[name].js',
@@ -27,6 +27,6 @@ export default defineConfig({
     hmr: {
       port: 5173
     },
-    open: '/popup.html'
+    open: '/index.html'
   }
 }); 
