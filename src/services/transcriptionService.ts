@@ -3,23 +3,43 @@ import { TranscriptionResult } from '../types/audio';
 
 export class TranscriptionService {
   private transcriber: any = null;
+  private isInitializing: boolean = false;
+  private initPromise: Promise<void> | null = null;
 
   async initialize(): Promise<void> {
-    try {
-      if (!this.transcriber) {
-        console.log('Initializing transcription service...');
-        // Initialize the pipeline
-        const pipe = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny.en');
-        console.log('Pipeline created successfully');
-        
-        // Test the pipeline with a simple sine wave
-        await this.testPipeline(pipe);
-        console.log('Pipeline test completed successfully');
-        
-        this.transcriber = pipe;
+    if (this.transcriber) {
+      console.log('Transcriber already initialized');
+      return;
+    }
+
+    if (this.isInitializing) {
+      console.log('Transcriber initialization already in progress, waiting...');
+      if (this.initPromise) {
+        return this.initPromise;
       }
+    }
+
+    this.isInitializing = true;
+    this.initPromise = this._initialize();
+    return this.initPromise;
+  }
+
+  private async _initialize(): Promise<void> {
+    try {
+      console.log('Initializing transcription service...');
+      // Initialize the pipeline
+      const pipe = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny.en');
+      console.log('Pipeline created successfully');
+      
+      // Test the pipeline with a simple sine wave
+      await this.testPipeline(pipe);
+      console.log('Pipeline test completed successfully');
+      
+      this.transcriber = pipe;
+      this.isInitializing = false;
     } catch (error: any) {
       console.error('Transcription service initialization failed:', error);
+      this.isInitializing = false;
       throw new Error(`Failed to initialize transcriber: ${error.message}`);
     }
   }
@@ -63,11 +83,12 @@ export class TranscriptionService {
         return { text: '' }; // Audio too quiet, skip transcription
       }
 
-      console.log('Starting transcription...');
+      console.log('Starting transcription of audio with length:', audioData.length);
       const result = await this.transcriber(audioData, {
         task: 'transcribe',
         language: 'en',
         chunk_length_s: 30,
+        stride_length_s: 5,
         return_timestamps: false
       });
 

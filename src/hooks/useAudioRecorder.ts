@@ -15,7 +15,6 @@ export function useAudioRecorder(onTranscriptionComplete?: (text: string) => voi
   const audioQueueRef = useRef<AudioChunk[]>([]);
   const isProcessingRef = useRef(false);
   const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const combinedChunksRef = useRef<Blob[]>([]);
 
   // Initialize services
   useEffect(() => {
@@ -32,23 +31,13 @@ export function useAudioRecorder(onTranscriptionComplete?: (text: string) => voi
         
         audioRecordingServiceRef.current = new AudioRecordingService(
           (chunk: AudioChunk) => {
-            console.log('Received audio chunk, size:', chunk.blob.size);
-            combinedChunksRef.current.push(chunk.blob);
+            console.log('Received audio chunk, size:', chunk.blob.size, 'bytes');
+            // Process each chunk immediately
+            audioQueueRef.current.push(chunk);
             
-            // Process combined chunks if we have enough data (15 seconds worth)
-            if (combinedChunksRef.current.length >= 3) {
-              const combinedBlob = new Blob(combinedChunksRef.current, { type: combinedChunksRef.current[0].type });
-              console.log('Created combined chunk of size:', combinedBlob.size);
-              audioQueueRef.current.push({
-                blob: combinedBlob,
-                timestamp: Date.now()
-              });
-              combinedChunksRef.current = [];
-              
-              // Trigger processing if not already processing
-              if (!isProcessingRef.current) {
-                processNextInQueue();
-              }
+            // Trigger processing if not already processing
+            if (!isProcessingRef.current) {
+              processNextInQueue();
             }
           }
         );
@@ -78,7 +67,7 @@ export function useAudioRecorder(onTranscriptionComplete?: (text: string) => voi
     }
 
     try {
-      console.log('Processing audio chunk of size:', chunk.blob.size);
+      console.log('Processing audio chunk of size:', chunk.blob.size, 'bytes');
       setLoading({ status: 'processing', message: 'Processing audio chunk...' });
       
       const audioData = await audioProcessingServiceRef.current.convertBlobToAudioData(chunk.blob);
@@ -90,11 +79,13 @@ export function useAudioRecorder(onTranscriptionComplete?: (text: string) => voi
         throw result.error;
       }
 
-      if (result.text) {
+      if (result.text && result.text.trim()) {
         console.log('Transcription successful:', result.text);
         const newText = transcribedText ? transcribedText + ' ' + result.text : result.text;
         setTranscribedText(newText);
         onTranscriptionComplete?.(newText);
+      } else {
+        console.log('No text transcribed from this chunk');
       }
       
       setLoading({ status: 'idle', message: '' });
@@ -140,9 +131,9 @@ export function useAudioRecorder(onTranscriptionComplete?: (text: string) => voi
         throw new Error('Recording service not initialized');
       }
 
-      // Clear any existing chunks
-      combinedChunksRef.current = [];
+      // Clear any existing chunks and transcribed text
       audioQueueRef.current = [];
+      setTranscribedText('');
 
       setLoading({ status: 'loading', message: 'Starting recording...' });
       await audioRecordingServiceRef.current.startRecording();
@@ -163,21 +154,6 @@ export function useAudioRecorder(onTranscriptionComplete?: (text: string) => voi
     console.log('Stopping recording...');
     setIsRecording(false);
     await audioRecordingServiceRef.current.stopRecording();
-    
-    // Process any remaining chunks
-    if (combinedChunksRef.current.length > 0) {
-      const finalBlob = new Blob(combinedChunksRef.current, { type: combinedChunksRef.current[0].type });
-      console.log('Processing final combined chunk of size:', finalBlob.size);
-      audioQueueRef.current.push({
-        blob: finalBlob,
-        timestamp: Date.now()
-      });
-      combinedChunksRef.current = [];
-      
-      if (!isProcessingRef.current) {
-        processNextInQueue();
-      }
-    }
     
     console.log(`Stopped recording. ${audioQueueRef.current.length} chunks remaining to process`);
     setLoading({ status: 'idle', message: '' });

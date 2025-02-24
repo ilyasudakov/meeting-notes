@@ -4,7 +4,7 @@ export class AudioRecordingService {
   private mediaRecorder: MediaRecorder | null = null;
   private stream: MediaStream | null = null;
   private onDataAvailable: (chunk: AudioChunk) => void;
-  private static CHUNK_SIZE_MS = 5000; // Increased to 5 seconds
+  private static CHUNK_SIZE_MS = 2000; // Reduced to 2 seconds for more immediate feedback
 
   constructor(onDataAvailable: (chunk: AudioChunk) => void) {
     this.onDataAvailable = onDataAvailable;
@@ -71,7 +71,7 @@ export class AudioRecordingService {
       };
 
       this.mediaRecorder = mediaRecorder;
-      mediaRecorder.start(AudioRecordingService.CHUNK_SIZE_MS); // Capture in 5-second chunks
+      mediaRecorder.start(AudioRecordingService.CHUNK_SIZE_MS); // Capture in 2-second chunks
       console.log('Recording started successfully with chunk size:', AudioRecordingService.CHUNK_SIZE_MS, 'ms');
     } catch (error) {
       console.error('Failed to start recording:', error);

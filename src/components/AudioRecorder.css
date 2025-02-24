@@ -1,67 +1,164 @@
-.audio-recorder {
+/* Modern Audio Recorder Styling */
+.audio-recorder-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.record-button {
-  padding: 8px 16px;
-  background-color: #561475;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
+/* Card Styling */
+.audio-recorder-card, .transcription-card {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
-.record-button:hover:not(:disabled) {
-  background-color: #3f0a57;
+.audio-recorder-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Header Styling */
+.recorder-header {
+  padding: 1.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+}
+
+.recorder-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.recorder-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* Audio Visualizer */
+.visualizer-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 100px;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+}
+
+.visualizer-bar {
+  width: 4px;
+  min-height: 3px;
+  border-radius: 2px;
+  transition: height 0.1s ease-in-out, background-color 0.3s ease;
+}
+
+/* Controls Section */
+.recorder-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.recording-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.recording-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff4081;
+  animation: pulse 1.5s infinite;
+}
+
+/* Record Button */
+.record-button {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.record-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .record-button:disabled {
-  background-color: #cccccc;
+  opacity: 0.6;
   cursor: not-allowed;
-  opacity: 0.7;
 }
 
-.record-button.recording {
-  background-color: #f44336;
-  animation: pulse 2s infinite;
+.button-icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background-color: #ff4081;
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
-.record-button.recording:hover {
-  background-color: #d32f2f;
+.record-button.recording .button-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+/* Status Indicator */
+.status-message {
+  min-height: 24px;
+  text-align: center;
 }
 
 .status-indicator {
-  text-align: center;
   font-size: 0.9rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  animation: fadeIn 0.3s ease;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .status-indicator.loading {
-  background-color: #e3f2fd;
-  color: #1976d2;
+  color: #3498db;
 }
 
 .status-indicator.processing {
-  background-color: #fff3e0;
-  color: #f57c00;
+  color: #f39c12;
 }
 
 .status-indicator.error {
-  background-color: #ffebee;
-  color: #d32f2f;
+  color: #e74c3c;
 }
 
 .dots span {
-  animation: dots 1.5s infinite;
   opacity: 0;
-  margin-left: 2px;
+  animation: dot 1.5s infinite;
 }
 
 .dots span:nth-child(2) {
@@ -72,40 +169,125 @@
   animation-delay: 1s;
 }
 
-@keyframes dots {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
+/* Transcription Card */
+.transcription-card {
+  padding: 1.5rem;
 }
 
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.transcription-display {
-  background-color: white;
-  border-radius: 4px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.transcription-display h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
+.transcription-card h3 {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
   color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.5rem;
 }
 
-.transcription-display p {
+.transcription-content {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.transcription-content p {
   margin: 0;
-  line-height: 1.5;
-  color: #666;
+  color: #333;
   white-space: pre-wrap;
-  word-break: break-word;
+}
+
+.transcription-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-button {
+  background-color: #6e8efb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-button:hover {
+  background-color: #5a7df9;
+  transform: translateY(-2px);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dot {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .audio-recorder-container {
+    padding: 1rem 0.5rem;
+  }
+  
+  .recorder-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .visualizer-container {
+    height: 80px;
+  }
+  
+  .record-button {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .recorder-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .recorder-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .visualizer-container {
+    height: 60px;
+  }
+  
+  .visualizer-bar {
+    width: 3px;
+  }
 } 
