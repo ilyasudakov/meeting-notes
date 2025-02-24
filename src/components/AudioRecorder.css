@@ -7,7 +7,7 @@
 
 .record-button {
   padding: 8px 16px;
-  background-color: #4CAF50;
+  background-color: #561475;
   color: white;
   border: none;
   border-radius: 4px;
@@ -17,7 +17,7 @@
 }
 
 .record-button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: #3f0a57;
 }
 
 .record-button:disabled {
