@@ -1,35 +1,17 @@
-import React, { useState } from 'react';
-import './Popup.css';
+import React, { useState } from 'react'
 
 const Popup: React.FC = () => {
-  const [isRecording, setIsRecording] = useState(false);
-
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    // TODO: Implement actual recording logic
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      if (tab.id) {
-        chrome.tabs.sendMessage(tab.id, {
-          type: isRecording ? 'STOP_RECORDING' : 'START_RECORDING'
-        });
-      }
-    });
-  };
+  const [count, setCount] = useState(0)
 
   return (
     <div className="popup">
-      <h1>Meet Transcriber</h1>
-      <button 
-        onClick={toggleRecording}
-        className={`record-button ${isRecording ? 'recording' : ''}`}
-      >
-        {isRecording ? 'Stop Recording' : 'Start Recording'}
+      <h1>React Chrome Extension</h1>
+      <p>This is a simple React Chrome Extension</p>
+      <button onClick={() => setCount(count + 1)}>
+        Count is: {count}
       </button>
-      <div className="status">
-        Status: {isRecording ? 'Recording...' : 'Ready'}
-      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Popup; 
+export default Popup 
