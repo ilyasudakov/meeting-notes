@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
+import AudioRecorder from '../components/AudioRecorder'
 
 const Popup: React.FC = () => {
-  const [count, setCount] = useState(0)
+  const [transcription, setTranscription] = useState<string>('')
+
+  const handleTranscriptionComplete = (text: string) => {
+    setTranscription(text)
+  }
 
   return (
     <div className="popup">
-      <h1>React Chrome Extension</h1>
-      <p>This is a simple React Chrome Extension</p>
-      <button onClick={() => setCount(count + 1)}>
-        Count is: {count}
-      </button>
+      <h1>Meeting Notes</h1>
+      <AudioRecorder onTranscriptionComplete={handleTranscriptionComplete} />
     </div>
   )
 }

@@ -1,7 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
+import AudioRecorder from '../components/AudioRecorder';
 const Popup = () => {
-    const [count, setCount] = useState(0);
-    return (_jsxs("div", { className: "popup", children: [_jsx("h1", { children: "React Chrome Extension" }), _jsx("p", { children: "This is a simple React Chrome Extension" }), _jsxs("button", { onClick: () => setCount(count + 1), children: ["Count is: ", count] })] }));
+    const [transcription, setTranscription] = useState('');
+    const handleTranscriptionComplete = (text) => {
+        setTranscription(text);
+    };
+    return (_jsxs("div", { className: "popup", children: [_jsx("h1", { children: "Meeting Notes" }), _jsx(AudioRecorder, { onTranscriptionComplete: handleTranscriptionComplete })] }));
 };
 export default Popup;
