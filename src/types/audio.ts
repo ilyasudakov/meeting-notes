@@ -14,5 +14,5 @@ export interface AudioRecorderProps {
 
 export interface TranscriptionResult {
   text: string;
-  error?: Error;
+  error?: any;
 } 
