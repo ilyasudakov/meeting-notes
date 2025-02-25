@@ -50,7 +50,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
           <div className="recording-time">
             {isRecording && <div className="recording-indicator"></div>}
             <span>
-              {isRecording ? formatTime(recordingTime) : "Ready to record"}
+              {isRecording ? formatTime(recordingTime) : "Ready"}
             </span>
           </div>
 
